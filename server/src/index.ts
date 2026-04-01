@@ -14,7 +14,11 @@ import reservationRoutes from './routes/reservationRoutes.js';
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasource: {
+    url: process.env.DATABASE_URL,
+  },
+} as any);
 const PORT = process.env.PORT || 4000;
 
 // Middleware
