@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { seedDatabase } from '../api/seed';
 
 export function Settings() {
+  const [isSeeding, setIsSeeding] = useState(false);
+
+  const handleSeed = async () => {
+    setIsSeeding(true);
+    await seedDatabase();
+    setIsSeeding(false);
+  };
+
   return (
     <div className="pt-24 px-6 max-w-2xl mx-auto space-y-12 pb-12">
       <div className="space-y-2">
@@ -9,6 +18,23 @@ export function Settings() {
       </div>
 
       <div className="space-y-8">
+        <section className="space-y-4">
+          <h3 className="text-primary-fixed font-headline font-bold uppercase tracking-[0.2em] text-xs">Desarrollo (Debug)</h3>
+          <div className="p-4 bg-primary-fixed/10 border border-primary-fixed/30 rounded-2xl flex items-center justify-between">
+            <div>
+              <p className="font-bold text-primary-fixed">Sembrar Base de Datos</p>
+              <p className="text-xs text-white/70">Llena la BD de Easypanel con equipos, reservas y ligas de prueba.</p>
+            </div>
+            <button 
+              onClick={handleSeed}
+              disabled={isSeeding}
+              className="px-4 py-2 bg-primary-fixed text-on-primary-fixed font-bold text-sm rounded-full tracking-wide disabled:opacity-50"
+            >
+              {isSeeding ? 'Generando...' : 'Sembrar Datos'}
+            </button>
+          </div>
+        </section>
+
         <section className="space-y-4">
           <h3 className="text-primary-fixed font-headline font-bold uppercase tracking-[0.2em] text-xs">Cuenta y Privacidad</h3>
           <div className="space-y-2">

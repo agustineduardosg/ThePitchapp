@@ -27,7 +27,14 @@ const PORT = process.env.PORT || 4000;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Para simplificar local y Easypanel, si no hay origin o incluye localhost o coincide
+    if (!origin || origin.includes('localhost') || origin === process.env.CLIENT_URL) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 app.use(morgan('dev'));
@@ -38,6 +45,8 @@ app.use(cookieParser());
 app.use('/api/auth', authRoutes);
 app.use('/api/teams', teamRoutes);
 app.use('/api/leagues', leagueRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/reservations', reservationRoutes);
 
 // Health Check
 app.get('/health', (req, res) => {
