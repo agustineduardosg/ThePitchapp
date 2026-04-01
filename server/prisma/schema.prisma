@@ -1,0 +1,135 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  name          String
+  image         String?
+  role          String         @default("PLAYER") // PLAYER, ADMIN, OWNER
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  profile       PlayerProfile?
+  teams         Team[]         @relation("TeamCreator")
+  leagues       League[]       @relation("LeagueCreator")
+  reservations  Reservation[]
+  notifications Notification[]
+}
+
+model PlayerProfile {
+  id       String @id @default(cuid())
+  userId   String @unique
+  user     User   @relation(fields: [userId], references: [id])
+  position String
+  level    String
+  foot     String
+  height   String
+  weight   String
+  age      String
+  stats    Json // { pace: number, shooting: number, ... }
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  name         String
+  region       String
+  location     String?
+  lat          Float?
+  lng          Float?
+  format       String
+  level        String
+  membersCount Int      @default(1)
+  wins         Int      @default(0)
+  losses       Int      @default(0)
+  draws        Int      @default(0)
+  rating       String?
+  image        String
+  tags         Json?    // Array of strings
+  creatorId    String
+  creator      User     @relation("TeamCreator", fields: [creatorId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model League {
+  id          String   @id @default(cuid())
+  name        String
+  region      String
+  teamsCount  String   // e.g. "24/32"
+  status      String   // Activa, Inscripciones, Finalizada
+  startDate   DateTime
+  prize       String
+  fee         String
+  description String
+  format      String?
+  rules       String?
+  creatorId   String
+  creator     User     @relation("LeagueCreator", fields: [creatorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  matches     Match[]
+  standings   Standing[]
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  courtName String
+  date      String   // Store as string for flexibility in "Hoy, 20:00"
+  price     String
+  status    String   // Confirmada, Pendiente, Cancelada
+  image     String
+  type      String   // Individual, Dividido
+  splitInfo Json?    // Complex object for split payments
+  createdAt DateTime @default(now())
+}
+
+model Match {
+  id           String   @id @default(cuid())
+  leagueId     String
+  league       League   @relation(fields: [leagueId], references: [id])
+  homeTeamName String
+  awayTeamName String
+  homeScore    Int?
+  awayScore    Int?
+  date         String
+  time         String
+  status       String   // Programado, En Curso, Finalizado
+  createdAt    DateTime @default(now())
+}
+
+model Standing {
+  id        String @id @default(cuid())
+  leagueId  String
+  league    League @relation(fields: [leagueId], references: [id])
+  teamName  String
+  pj        Int    @default(0)
+  g         Int    @default(0)
+  e         Int    @default(0)
+  p         Int    @default(0)
+  gf        Int    @default(0)
+  gc        Int    @default(0)
+  dg        Int    @default(0)
+  pts       Int    @default(0)
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  title      String
+  message    String
+  time       String
+  read       Boolean  @default(false)
+  type       String   // challenge, reservation, info, league
+  actionData Json?
+  createdAt  DateTime @default(now())
+}
