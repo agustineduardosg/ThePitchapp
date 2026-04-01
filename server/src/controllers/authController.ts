@@ -56,8 +56,8 @@ export const register = async (req: Request, res: Response): Promise<any> => {
       token
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al registrar usuario' });
+    console.error('SERVER ERROR REGISTER:', err);
+    res.status(500).json({ error: 'Error al registrar usuario', details: err instanceof Error ? err.message : String(err) });
   }
 };
 
