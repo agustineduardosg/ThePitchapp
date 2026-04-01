@@ -1,0 +1,7 @@
+{
+  "name": "The Pitch - Reserva de Canchas",
+  "description": "Plataforma de reserva de canchas de fútbol y pádel, gestión de equipos y torneos.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

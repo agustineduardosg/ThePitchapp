@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-headline: "Manrope", sans-serif;
+  
+  --color-primary-fixed: #caf300;
+  --color-primary-fixed-dim: #b0d500;
+  --color-on-primary-fixed: #171e00;
+  --color-surface-container-low: #1c1b1b;
+  --color-surface-container-high: #2a2a2a;
+  --color-surface-container-highest: #353534;
+  --color-on-surface-variant: #c5c9ac;
+}
+
+@layer base {
+  body {
+    @apply bg-[#131313] text-[#e5e2e1] font-sans;
+  }
+}
+
+.glass-card {
+  background: rgba(53, 53, 52, 0.6);
+  backdrop-filter: blur(24px);
+}
+
+.pitch-gradient {
+  background: linear-gradient(135deg, #caf300 0%, #b0d500 100%);
+}
+
+.map-gradient-overlay {
+  background: linear-gradient(to bottom, rgba(19, 19, 19, 0.9) 0%, transparent 15%, transparent 85%, rgba(19, 19, 19, 1) 100%);
+}
+
+.marker-pulse {
+  box-shadow: 0 0 0 0 rgba(202, 243, 0, 0.7);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(202, 243, 0, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(202, 243, 0, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(202, 243, 0, 0); }
+}
