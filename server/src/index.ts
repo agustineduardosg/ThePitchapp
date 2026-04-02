@@ -17,7 +17,10 @@ import reservationRoutes from './routes/reservationRoutes.js';
 
 dotenv.config();
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+const pool = new Pool({ 
+  connectionString: process.env.DATABASE_URL,
+  ssl: false // Forzamos deshabilitar SSL ya que la red de Docker interna de Easypanel no lo usa
+});
 const adapter = new PrismaPg(pool);
 
 const app = express();
